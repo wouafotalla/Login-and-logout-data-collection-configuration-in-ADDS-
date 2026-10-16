@@ -1,0 +1,57 @@
+The Windows Server 2022 VM is the domain controller for the forest dsi.local, with Group Policy Management open and a Windows 10 VM as the client.
+
+
+
+1. Process step by step
+
+Step 1: Create and share the log folder
+
+On the server, create LogData by Talla (shown as SOC-LAB0237's share).
+Share it and set permissions:
+Share permissions: Domain Users (or Authenticated Users) get Change.
+NTFS permissions: Domain Users get Modify (or at least write/append), Domain Admins get Full Control, and the support team gets Read & Execute.
+
+Users must be able to write to the folder, because the scripts run in their own context.
+
+Step 2: Create the two scripts
+
+login.bat appends to login.txt.
+logout.bat appends to logout.txt, with the same command but a different target file.
+
+Step 3: Link the scripts to a GPO
+
+Open Group Policy Management and create a GPO, for example GPO-Logon-Logoff-Tracking, then link it to the domain or to the OU holding the users (here under dsi.local).
+Edit the GPO and go to User Configuration → Policies → Windows Settings → Scripts (Logon/Logoff).
+In Logon, click Add and select login.bat. In Logoff, add logout.bat.
+
+Step 4: Test on the client
+
+On the Windows 10 VM, run gpupdate /force.
+Log off and log back in with a domain user.
+On the server, check that login.txt and logout.txt have appeared in the shared folder.
+
+Step 5: Give the file to L1/L2 support
+
+Give the support group read-only access to the share, or export copies on a schedule.
+They can open the files in Notepad or Excel, or filter them with PowerShell, for example Select-String -Path login.txt -Pattern "jdoe".
+3. Sample logs
+
+These are illustrative examples of what the command produces. They are not captured from your lab.
+
+login.txt
+
+WIN10-PC01 tallaj Fri 10/16/2026 6:21:14.52
+WIN10-PC01 mbella Fri 10/16/2026 6:45:03.11
+WIN10-PC02 tallaj Fri 10/16/2026 7:02:37.80
+WIN10-PC03 nkeng Fri 10/16/2026 7:15:49.26
+
+logout.txt
+
+WIN10-PC01 tallaj Fri 10/16/2026 6:44:58.07
+WIN10-PC01 mbella Fri 10/16/2026 9:30:21.64
+WIN10-PC02 tallaj Fri 10/16/2026 11:12:05.33
+
+Support can read these as: "tallaj logged on at WIN10-PC01 at 6:21 and logged off at 6:44, so the session lasted about 23 minutes." A missing logout line may mean a forced shutdown or a crash. The same user logging in from two PCs at once may be worth investigating.
+
+4. Improvements to consider
+Quote the path. The folder name contains spaces, so use quotes, or the redirect can fail:
