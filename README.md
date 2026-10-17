@@ -1,3 +1,6 @@
+<img width="1920" height="1080" alt="CREATING LOGS FILES" src="https://github.com/user-attachments/assets/74dd5aa3-e164-46ac-8b5e-941fb0cfffbd" />
+<img width="1920" height="1080" alt="LOGIN FILE CREATION" src="https://github.com/user-attachments/assets/0cd3329c-6765-41fd-9c03-008cf85ebe28" />
+
 Login and logout data collection in AD DS is configured to monitor user access, detect security threats, 
 support compliance requirements, perform forensic investigations, and troubleshoot authentication issues.
 It provides visibility into who accessed resources, when they accessed them, and from where.
