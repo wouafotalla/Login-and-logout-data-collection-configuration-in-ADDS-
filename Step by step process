@@ -1,7 +1,5 @@
 The Windows Server 2022 VM is the domain controller for the forest dsi.local, with Group Policy Management open and a Windows 10 VM as the client.
 
-
-
 1. Process step by step
 
 Step 1: Create and share the log folder
